@@ -28,17 +28,27 @@ let baseMaps = {
 //add a map obj with a center and zoom level
 let map = L.map("mapid", {
   center: [43.7, -79.3],
-  zoom: 2,
-  layers: [satelliteStreets]
+  zoom: 10,
+  layers: [streets]
 });
 
 L.control.layers(baseMaps).addTo(map);
 
-let torontoData = 'https://raw.githubusercontent.com/shumph10/Mapping_Earthquakes/main/Mapping_GeoJSON_Linestrings/torontoRoutes.json'
+let torontoNeighborhood = 'https://raw.githubusercontent.com/shumph10/Mapping_Earthquakes/main/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json'
 
 // Grabbing our GeoJSON data.
-d3.json(torontoData).then(function(data) {
+d3.json(torontoNeighborhood).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.
-L.geoJSON(data).addTo(map);
+L.geoJSON(data, {
+  style: function(feature) {
+    return {
+      weight: 1,
+      fillColor: "yellow",
+     }
+  },
+  onEachFeature: function(feature, layer) {
+    layer.bindPopup(`<h3>Neightborhood: ${feature.properties.AREA_NAME}</h3>`)
+  }
+}).addTo(map);
 });
