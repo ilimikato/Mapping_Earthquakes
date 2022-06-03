@@ -42,10 +42,10 @@ function styleInfo(feature) {
   return{
     opacity: 1,
     fillOpacity: 1,
-    fillColor: "orange",
+    //replace color code with funct to get color based on mag
+    fillColor: getColor(feature.properties.mag),
     color: "#000000",
-    //ref the get Radius funct and the mag from the data for calc 
-      //have to make the function below
+    //ref the function and mag from data to calc the radius
     radius: getRadius(feature.properties.mag),
     //set stroke to true to keep the boarder on markers
     stroke: true,
@@ -65,6 +65,27 @@ function getRadius(magnitude) {
   return magnitude*4;
 }
 
+//create the function w/ conditionals to get the 
+  //color of marker based on mag of quake
+  function getColor(magnitude) {
+    if (magnitude > 5) {
+      return "#ea2c2c";
+    }
+    if (magnitude > 4) {
+      return "#ea822c";
+    }
+    if (magnitude > 3) {
+      return "#ee9c00";
+    }
+    if (magnitude > 2) {
+      return "#eecc00";
+    }
+    if (magnitude > 1) {
+      return "#d4ee00";
+    }
+    return "#98ee00";
+  }
+
 // Grabbing our GeoJSON data.
 d3.json(quakeData).then(function(data) {
   console.log(data);
@@ -75,6 +96,12 @@ L.geoJSON(data, {
     console.log(data);
     return L.circleMarker(latlng);
   },
-  style: styleInfo
+  style: styleInfo,
+  //create a popup for each circleMarker to display
+    //mag and location after the marker has been 
+    //created and styles
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+    }
 }).addTo(map);
 });
