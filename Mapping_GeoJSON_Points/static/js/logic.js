@@ -38,7 +38,7 @@ let map = L.map("mapid", {
     //use the baseMaps var we def earlier that holds all the maps layers
     //allows the 2 diff map stules to be shown on the index.html file
     //appears as a button with like 3 stacked things
-    L.control.layer(baseMaps).addTo(map);
+L.control.layers(baseMaps).addTo(map);
 
 //accessing the GeoJSON URL
 let airportData = "https://raw.githubusercontent.com/shumph10/Mapping_Earthquakes/main/majorAirports.json"
@@ -51,5 +51,5 @@ let airportData = "https://raw.githubusercontent.com/shumph10/Mapping_Earthquake
 d3.json(airportData).then(function(data) {
     console.log(data);
     //creating the GeoJSON layer with the retrieved data
-    L.geoJSON(data).addTo(map);
+    let datapoints = L.geoJSON(data).addTo(map);
 });
